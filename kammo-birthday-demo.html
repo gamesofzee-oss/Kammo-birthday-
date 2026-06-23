@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>For Kammo 💛</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:        #FBEAE3;
+    --paper-deep:   #F3D6CC;
+    --rose:         #C7395B;
+    --rose-soft:    #F4B8C0;
+    --ink:          #5B2A2E;
+    --gold:         #D9A441;
+    --white:        #FFFDFB;
+    --shadow: 0 18px 40px -12px rgba(91,42,46,0.35);
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    min-height:100dvh;
+    background:
+      radial-gradient(circle at 20% 15%, #F8DFD3 0%, transparent 55%),
+      radial-gradient(circle at 85% 85%, #F6D6CE 0%, transparent 50%),
+      var(--paper-deep);
+    font-family:'Quicksand', sans-serif;
+    color:var(--ink);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+
+  .frame{
+    position:relative;
+    width:min(440px, 100vw);
+    height:min(900px, 100dvh);
+    background:var(--paper);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    isolation:isolate;
+  }
+  @media (min-width:520px){
+    .frame{ border-radius:32px; height:min(860px, 94dvh); }
+  }
+
+  /* ---------- ambient floating hearts ---------- */
+  .ambient{ position:absolute; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .ambient span{
+    position:absolute; bottom:-10%; font-size:14px; color:var(--rose-soft);
+    opacity:.55; animation: float 11s linear infinite;
+  }
+  .ambient span:nth-child(1){ left:8%;  animation-delay:0s;   font-size:12px;}
+  .ambient span:nth-child(2){ left:22%; animation-delay:2.2s; font-size:18px;}
+  .ambient span:nth-child(3){ left:40%; animation-delay:4.4s; font-size:10px;}
+  .ambient span:nth-child(4){ left:58%; animation-delay:1.1s; font-size:15px;}
+  .ambient span:nth-child(5){ left:74%; animation-delay:5.5s; font-size:12px;}
+  .ambient span:nth-child(6){ left:88%; animation-delay:3.3s; font-size:17px;}
+  .ambient span:nth-child(7){ left:65%; animation-delay:7s;   font-size:11px;}
+  .ambient span:nth-child(8){ left:30%; animation-delay:8.5s; font-size:13px;}
+  @keyframes float{
+    0%{ transform:translateY(0) rotate(0deg); opacity:0; }
+    10%{ opacity:.6; }
+    90%{ opacity:.4; }
+    100%{ transform:translateY(-820px) rotate(40deg); opacity:0; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .ambient span{ animation:none; display:none; }
+  }
+
+  /* ---------- scenes ---------- */
+  .scene{
+    position:absolute; inset:0; z-index:1;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:34px 28px;
+    opacity:0; transform:scale(.95);
+    pointer-events:none;
+    transition: opacity .55s ease, transform .55s ease;
+  }
+  .scene.active{ opacity:1; transform:scale(1); pointer-events:auto; z-index:2; }
+
+  h1.title{
+    font-family:'Caveat', cursive;
+    font-weight:700;
+    color:var(--rose);
+    font-size:clamp(34px, 9vw, 46px);
+    line-height:1.1;
+    margin:0 0 6px;
+  }
+  p.sub{
+    font-size:14.5px;
+    color:var(--ink);
+    opacity:.75;
+    margin:0 0 22px;
+    max-width:300px;
+  }
+
+  button.btn{
+    font-family:'Quicksand', sans-serif;
+    font-weight:700;
+    font-size:15px;
+    letter-spacing:.2px;
+    color:var(--white);
+    background:var(--rose);
+    border:none;
+    border-radius:30px;
+    padding:13px 30px;
+    cursor:pointer;
+    box-shadow:0 10px 22px -8px rgba(199,57,91,.55);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  button.btn:hover{ transform:translateY(-2px); }
+  button.btn:active{ transform:translateY(0px) scale(.97); }
+  button.btn:focus-visible{ outline:3px solid var(--gold); outline-offset:2px; }
+  button.btn.ghost{
+    background:transparent; color:var(--rose); border:2px solid var(--rose);
+    box-shadow:none;
+  }
+
+  /* ---------- mascot (original doodle pup, not a licensed character) ---------- */
+  .pup{ width:62px; height:auto; opacity:.95; }
+  .pup-corner{ position:absolute; bottom:18px; right:18px; width:54px; z-index:3; }
+
+  /* ================= LOCK SCENE ================= */
+  #scene-lock .lock-wrap{ display:flex; flex-direction:column; align-items:center; gap:18px; }
+  .code-display{ display:flex; gap:12px; }
+  .code-slot{
+    width:38px; height:38px; border:2px solid var(--rose);
+    border-radius:10px; display:flex; align-items:center; justify-content:center;
+    font-size:18px; color:var(--rose); background:var(--white);
+    transition: transform .15s ease, background .2s ease;
+  }
+  .code-slot.filled{ background:var(--rose); color:var(--white); transform:scale(1.06); }
+  .code-display.shake{ animation: shake .45s ease; }
+  @keyframes shake{
+    0%,100%{ transform:translateX(0); }
+    20%{ transform:translateX(-8px); }
+    40%{ transform:translateX(8px); }
+    60%{ transform:translateX(-6px); }
+    80%{ transform:translateX(6px); }
+  }
+
+  .keypad{
+    display:grid; grid-template-columns:repeat(3, 64px); gap:11px;
+  }
+  .heart-key{
+    --s:64px;
+    width:var(--s); height:var(--s);
+    position:relative;
+    background:none; border:none; cursor:pointer; padding:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .heart-key svg{ width:100%; height:100%; display:block; }
+  .heart-key .digit{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-42%);
+    font-weight:700; font-size:17px; color:var(--white);
+    font-family:'Quicksand',sans-serif;
+  }
+  .heart-key:active svg path{ fill:var(--ink); }
+  .heart-key:focus-visible{ outline:3px solid var(--gold); outline-offset:3px; border-radius:50%;}
+
+  /* ================= REVEAL SCENE ================= */
+  .sparkle{ position:absolute; font-size:20px; color:var(--gold); animation: twinkle 1.8s ease-in-out infinite; }
+  .sparkle.s1{ top:14%; left:12%; animation-delay:.2s; }
+  .sparkle.s2{ top:20%; right:14%; font-size:14px; animation-delay:.9s; }
+  .sparkle.s3{ bottom:30%; left:18%; font-size:16px; animation-delay:1.4s; }
+  @keyframes twinkle{ 0%,100%{ opacity:.25; transform:scale(.8);} 50%{ opacity:1; transform:scale(1.15);} }
+
+  /* ================= CAKE (shared by wish + message scenes) ================= */
+  .cake-stage{ display:flex; flex-direction:column; align-items:center; margin:6px 0 22px; }
+  .candles{ display:flex; gap:13px; margin-bottom:-8px; z-index:2; height:46px; align-items:flex-end; }
+  .candle{ width:6px; height:30px; border-radius:2px;
+    background:linear-gradient(180deg, var(--gold), #b9812a); position:relative; }
+  .candle::before{
+    content:''; position:absolute; left:50%; top:-15px; width:11px; height:15px;
+    transform:translateX(-50%);
+    background: radial-gradient(circle at 50% 70%, #fff3c4 0%, #ffb347 45%, #e2572b 100%);
+    border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+    clip-path: polygon(50% 0%, 90% 70%, 50% 100%, 10% 70%);
+    animation: flicker 1.3s ease-in-out infinite;
+    transform-origin:bottom center;
+  }
+  .candle::after{ content:''; position:absolute; left:50%; top:-2px; width:2px; height:6px; background:#3a2a1a; transform:translateX(-50%); }
+  @keyframes flicker{
+    0%,100%{ transform:translateX(-50%) scale(1) rotate(-2deg); }
+    50%{ transform:translateX(-50%) scale(1.12) rotate(3deg); }
+  }
+  .candles.blown .candle::before{
+    animation:none; opacity:0; transform:translateX(-50%) scale(0);
+    transition:opacity .4s ease, transform .4s ease;
+  }
+  .candles.blown .candle::after{ display:none; }
+  .smoke{ position:absolute; width:8px; height:8px; border-radius:50%; background:rgba(120,120,120,.35);
+    opacity:0; pointer-events:none; }
+  .candles.blown .smoke{ animation: puff 1.1s ease-out forwards; }
+  @keyframes puff{
+    0%{ opacity:.55; transform:translateY(0) scale(.6); }
+    100%{ opacity:0; transform:translateY(-34px) scale(1.8); }
+  }
+
+  .cake-tier-top{
+    width:178px; height:64px; background:linear-gradient(180deg,#fff,var(--rose-soft));
+    border-radius:14px 14px 6px 6px; position:relative;
+    box-shadow: inset 0 -6px 0 rgba(199,57,91,.18);
+  }
+  .cake-tier-top::before{ /* drip icing */
+    content:''; position:absolute; top:-2px; left:0; right:0; height:14px;
+    background:#fff;
+    -webkit-mask-image: radial-gradient(circle 7px at 10px 0, transparent 99%, #000 100%),
+                         radial-gradient(circle 7px at 30px 0, transparent 99%, #000 100%),
+                         radial-gradient(circle 7px at 50px 0, transparent 99%, #000 100%),
+                         radial-gradient(circle 7px at 70px 0, transparent 99%, #000 100%),
+                         radial-gradient(circle 7px at 90px 0, transparent 99%, #000 100%),
+                         radial-gradient(circle 7px at 110px 0, transparent 99%, #000 100%),
+                         radial-gradient(circle 7px at 130px 0, transparent 99%, #000 100%),
+                         radial-gradient(circle 7px at 150px 0, transparent 99%, #000 100%),
+                         radial-gradient(circle 7px at 170px 0, transparent 99%, #000 100%);
+    border-radius:10px 10px 0 0;
+  }
+  .cake-tier-top .dot{ position:absolute; width:6px; height:6px; border-radius:50%; background:var(--gold); opacity:.8; }
+  .cake-tier-bottom{
+    width:236px; height:58px; margin-top:-8px;
+    background:linear-gradient(180deg,var(--rose-soft),var(--rose));
+    border-radius:10px;
+    box-shadow: inset 0 -8px 0 rgba(91,42,46,.12);
+  }
+  .cake-plate{ width:268px; height:10px; background:var(--gold); border-radius:50%; opacity:.55; margin-top:2px; }
+
+  /* ================= MENU SCENE ================= */
+  .gift-row{ display:flex; gap:20px; margin-top:6px; }
+  .gift-btn{
+    width:96px; height:108px; border:none; background:var(--white);
+    border-radius:18px; box-shadow:0 10px 24px -10px rgba(91,42,46,.3);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+    cursor:pointer; transition: transform .15s ease;
+    font-family:'Quicksand'; font-weight:700; font-size:12px; color:var(--ink);
+  }
+  .gift-btn:hover{ transform:translateY(-4px); }
+  .gift-btn:focus-visible{ outline:3px solid var(--gold); outline-offset:2px; }
+  .gift-btn svg{ width:38px; height:38px; }
+
+  .corner-pup{ position:absolute; width:46px; opacity:.9; }
+  .corner-pup.left{ top:16px; left:14px; transform:scaleX(-1); }
+  .corner-pup.right{ top:16px; right:14px; }
+
+  .footer-note{ position:absolute; bottom:16px; font-size:11.5px; color:var(--ink); opacity:.5; letter-spacing:.3px; }
+
+  /* ---------- sub scenes (camera / letter / song) layered over menu ---------- */
+  .sub-scene{
+    position:absolute; inset:0; background:var(--paper);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:30px 26px;
+    transform:translateY(100%); transition: transform .5s ease;
+    z-index:4;
+  }
+  .sub-scene.active{ transform:translateY(0); }
+  .back-btn{
+    position:absolute; top:18px; left:18px; background:none; border:none;
+    color:var(--rose); font-family:'Quicksand'; font-weight:700; font-size:14px; cursor:pointer;
+    display:flex; align-items:center; gap:4px;
+  }
+  .back-btn:focus-visible{ outline:3px solid var(--gold); }
+
+  /* camera sub-scene */
+  .camera-illus{ width:120px; height:auto; margin:8px 0 18px; }
+  .polaroid{
+    width:200px; background:var(--white); padding:14px 14px 26px; border-radius:6px;
+    box-shadow:0 14px 30px -12px rgba(91,42,46,.4);
+    transform: rotate(-2deg);
+  }
+  .polaroid img{
+    width:100%; height:220px; object-fit:cover; border-radius:2px; display:block;
+    filter: blur(10px) grayscale(1) brightness(.6);
+    transition: filter 1.6s ease;
+  }
+  .polaroid.developed img{ filter: blur(0) grayscale(0) brightness(1); }
+  .polaroid figcaption{
+    font-family:'Caveat'; font-size:18px; color:var(--ink); margin-top:10px;
+  }
+
+  /* letter sub-scene */
+  .letter-wrap{ display:flex; flex-direction:column; gap:16px; align-items:center; width:100%; max-width:330px; }
+  .letter-photos{ display:flex; align-items:flex-end; gap:14px; align-self:flex-start; margin-left:6px; }
+  .stamp-photo{
+    width:78px; height:96px; padding:6px; background:var(--white);
+    border:2px dashed var(--rose-soft); transform:rotate(-6deg);
+    box-shadow:0 8px 16px -8px rgba(91,42,46,.35);
+  }
+  .stamp-photo img{ width:100%; height:100%; object-fit:cover; }
+  .big-photo{
+    width:118px; height:140px; padding:6px 6px 14px; background:var(--white);
+    transform:rotate(3deg); box-shadow:0 10px 20px -8px rgba(91,42,46,.4);
+  }
+  .big-photo img{ width:100%; height:100%; object-fit:cover; }
+  .note-card{
+    background:var(--white); border-radius:10px; padding:18px 20px;
+    box-shadow:0 10px 24px -12px rgba(91,42,46,.3);
+    font-family:'Caveat'; font-size:18px; line-height:1.5; color:var(--ink);
+    text-align:left;
+  }
+  .note-card .sign{ display:block; margin-top:10px; font-weight:700; color:var(--rose); }
+
+  /* song sub-scene */
+  .song-frame-wrap{ width:100%; max-width:320px; aspect-ratio:16/9; border-radius:12px; overflow:hidden; box-shadow:0 14px 30px -12px rgba(91,42,46,.4); }
+  .song-frame-wrap iframe{ width:100%; height:100%; border:0; }
+
+  .scene-stack > *{ width:100%; }
+</style>
+</head>
+<body>
+
+<div class="frame" id="frame">
+  <div class="ambient" aria-hidden="true">
+    <span>♡</span><span>♥</span><span>♡</span><span>♥</span>
+    <span>♡</span><span>♥</span><span>♡</span><span>♥</span>
+  </div>
+
+  <!-- ============ 1. LOCK ============ -->
+  <section class="scene active" id="scene-lock">
+    <div class="lock-wrap">
+      <h1 class="title" style="font-size:clamp(26px,7vw,32px)">a little something<br>for you, Kammo</h1>
+      <p class="sub">type the code only you would know 💛</p>
+
+      <div class="code-display" id="codeDisplay">
+        <div class="code-slot"></div>
+        <div class="code-slot"></div>
+        <div class="code-slot"></div>
+        <div class="code-slot"></div>
+      </div>
+
+      <div class="keypad" id="keypad"><!-- generated by JS --></div>
+    </div>
+    <svg class="pup pup-corner" viewBox="0 0 100 100" aria-hidden="true">
+      <ellipse cx="50" cy="62" rx="34" ry="26" fill="#fff" stroke="#5B2A2E" stroke-width="3"/>
+      <path d="M22 48 C14 28, 26 22, 34 38 Z" fill="#fff" stroke="#5B2A2E" stroke-width="3"/>
+      <path d="M78 48 C86 28, 70 20, 64 38 Z" fill="#5B2A2E"/>
+      <circle cx="40" cy="58" r="3.2" fill="#5B2A2E"/>
+      <circle cx="60" cy="58" r="3.2" fill="#5B2A2E"/>
+      <ellipse cx="50" cy="68" rx="4" ry="3" fill="#C7395B"/>
+      <path d="M30 76 Q50 88 70 76" fill="none" stroke="#5B2A2E" stroke-width="2.5"/>
+    </svg>
+  </section>
+
+  <!-- ============ 2. REVEAL ============ -->
+  <section class="scene" id="scene-reveal">
+    <span class="sparkle s1">✦</span><span class="sparkle s2">✧</span><span class="sparkle s3">✦</span>
+    <h1 class="title" style="font-size:clamp(36px,10vw,50px)">Happy Birthday,<br>Kammo!</h1>
+    <p class="sub">you unlocked it 🎉 — there's a little more waiting for you</p>
+    <button class="btn" onclick="goTo('scene-wish')">Next</button>
+  </section>
+
+  <!-- ============ 3. MAKE A WISH ============ -->
+  <section class="scene" id="scene-wish">
+    <h1 class="title">Make a wish</h1>
+    <p class="sub" id="wishSub">close your eyes for a second 🤍</p>
+    <div class="cake-stage">
+      <div class="candles" id="candles">
+        <div class="candle"></div>
+        <div class="candle"></div>
+        <div class="candle"></div>
+        <div class="candle"></div>
+        <div class="candle"></div>
+        <span class="smoke" style="left:6px;"></span>
+        <span class="smoke" style="left:30px;"></span>
+        <span class="smoke" style="left:54px;"></span>
+        <span class="smoke" style="left:78px;"></span>
+        <span class="smoke" style="left:102px;"></span>
+      </div>
+      <div class="cake-tier-top"></div>
+      <div class="cake-tier-bottom"></div>
+      <div class="cake-plate"></div>
+    </div>
+    <button class="btn" id="blowBtn" onclick="blowCandles()">Blow out the candles</button>
+    <button class="btn" id="wishNextBtn" style="display:none;" onclick="goTo('scene-message')">Next</button>
+  </section>
+
+  <!-- ============ 4. MESSAGE ============ -->
+  <section class="scene" id="scene-message">
+    <h1 class="title">Happy birthday,<br>my love.</h1>
+    <div class="cake-stage" style="margin-top:0;">
+      <div class="cake-tier-top"></div>
+      <div class="cake-tier-bottom"></div>
+      <div class="cake-plate"></div>
+    </div>
+    <p class="sub">I hope this year brings you everything you deserve, and then some.</p>
+    <button class="btn" onclick="goTo('scene-menu')">Next</button>
+  </section>
+
+  <!-- ============ 5. MENU + sub-scenes ============ -->
+  <section class="scene" id="scene-menu">
+    <svg class="corner-pup left" viewBox="0 0 100 100" aria-hidden="true">
+      <ellipse cx="50" cy="62" rx="34" ry="26" fill="#fff" stroke="#5B2A2E" stroke-width="3"/>
+      <path d="M22 48 C14 28, 26 22, 34 38 Z" fill="#fff" stroke="#5B2A2E" stroke-width="3"/>
+      <circle cx="40" cy="58" r="3" fill="#5B2A2E"/><circle cx="60" cy="58" r="3" fill="#5B2A2E"/>
+    </svg>
+    <svg class="corner-pup right" viewBox="0 0 100 100" aria-hidden="true">
+      <ellipse cx="50" cy="62" rx="34" ry="26" fill="#fff" stroke="#5B2A2E" stroke-width="3"/>
+      <path d="M78 48 C86 28, 70 20, 64 38 Z" fill="#5B2A2E"/>
+      <circle cx="40" cy="58" r="3" fill="#5B2A2E"/><circle cx="60" cy="58" r="3" fill="#5B2A2E"/>
+    </svg>
+
+    <h1 class="title">These are for you</h1>
+    <p class="sub">tap one to open, Kammo</p>
+
+    <div class="gift-row">
+      <button class="gift-btn" onclick="openSub('sub-camera')">
+        <svg viewBox="0 0 64 64"><rect x="6" y="20" width="52" height="34" rx="6" fill="#F4B8C0"/><rect x="22" y="12" width="20" height="10" rx="3" fill="#F4B8C0"/><circle cx="32" cy="37" r="11" fill="#FBEAE3" stroke="#5B2A2E" stroke-width="2.5"/><circle cx="48" cy="27" r="3" fill="#D9A441"/></svg>
+        a photo
+      </button>
+      <button class="gift-btn" onclick="openSub('sub-letter')">
+        <svg viewBox="0 0 64 64"><path d="M14 22 L32 8 L50 22 V20 a4 4 0 0 0-4-4 H18 a4 4 0 0 0-4 4 Z" fill="#D9A441"/><rect x="14" y="22" width="36" height="6" fill="#D9A441" opacity=".4"/><circle cx="32" cy="34" r="3" fill="#fff"/></svg>
+        a letter
+      </button>
+      <button class="gift-btn" onclick="openSub('sub-song')">
+        <svg viewBox="0 0 64 64"><path d="M44 10 L44 38 a8 8 0 1 1-4-7 V18 L26 22 V44 a8 8 0 1 1-4-7 V14 Z" fill="#C7395B"/></svg>
+        a song
+      </button>
+    </div>
+
+    <p class="footer-note">made for you, with love</p>
+
+    <!-- ---- sub: camera ---- -->
+    <div class="sub-scene" id="sub-camera">
+      <button class="back-btn" onclick="closeSub('sub-camera')">‹ back</button>
+      <h1 class="title" style="font-size:28px;" id="cameraTitle">get ready for a picture</h1>
+      <svg class="camera-illus" viewBox="0 0 120 90">
+        <rect x="6" y="20" width="108" height="62" rx="12" fill="#F4B8C0"/>
+        <rect x="40" y="6" width="40" height="20" rx="5" fill="#F4B8C0"/>
+        <circle cx="60" cy="52" r="22" fill="#FBEAE3" stroke="#5B2A2E" stroke-width="3"/>
+        <circle cx="60" cy="52" r="13" fill="#5B2A2E"/>
+        <circle cx="95" cy="34" r="5" fill="#D9A441"/>
+      </svg>
+      <button class="btn" id="developBtn" onclick="developPhoto()">Develop the photo</button>
+
+      <figure class="polaroid" id="polaroid" style="display:none;">
+        <img id="polaroidImg" src="https://picsum.photos/seed/kammo-camera/500/650" alt="A photo of you, Kammo">
+        <figcaption>there's no one else like you, Kammo 😍</figcaption>
+      </figure>
+    </div>
+
+    <!-- ---- sub: letter ---- -->
+    <div class="sub-scene" id="sub-letter">
+      <button class="back-btn" onclick="closeSub('sub-letter')">‹ back</button>
+      <div class="letter-wrap">
+        <div class="letter-photos">
+          <div class="stamp-photo"><img src="https://picsum.photos/seed/kammo-stamp/200/240" alt=""></div>
+          <div class="big-photo"><img src="https://picsum.photos/seed/kammo-big/260/320" alt=""></div>
+        </div>
+        <div class="note-card">
+          Happy birthday, my love.<br><br>
+          I don't say this enough, but I miss you even on the days we talk all day. You've been my calm in every storm this year, the first person I want to tell things to, and the reason so many ordinary days turned into favorite memories.<br><br>
+          So today, I just want you to feel exactly how loved you are.
+          <span class="sign">I love you, Kammo. 💛</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---- sub: song ---- -->
+    <div class="sub-scene" id="sub-song">
+      <button class="back-btn" onclick="closeSub('sub-song')">‹ back</button>
+      <h1 class="title" style="font-size:26px;">a song for you</h1>
+      <div class="song-frame-wrap">
+        <iframe id="songFrame" data-src="https://www.youtube.com/embed/GxldQ9eX2wo" src="about:blank" title="A song for Kammo" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  const PASSCODE = "0418";
+  let entered = "";
+
+  // build heart keypad
+  const layout = ["1","2","3","4","5","6","7","8","9","*","0","#"];
+  const keypad = document.getElementById('keypad');
+  layout.forEach(k=>{
+    const b = document.createElement('button');
+    b.className='heart-key';
+    b.setAttribute('aria-label', 'key '+k);
+    b.innerHTML = `<svg viewBox="0 0 100 90"><path d="M50 82 C20 60 4 42 4 24 C4 8 16 0 28 0 C38 0 46 6 50 16 C54 6 62 0 72 0 C84 0 96 8 96 24 C96 42 80 60 50 82 Z" fill="#F4B8C0"/></svg><span class="digit">${k}</span>`;
+    b.onclick = ()=>pressKey(k);
+    keypad.appendChild(b);
+  });
+
+  const slots = document.querySelectorAll('.code-slot');
+  const codeDisplay = document.getElementById('codeDisplay');
+
+  function pressKey(k){
+    if(entered.length>=4) return;
+    entered += k;
+    renderSlots();
+    if(entered.length===4){
+      setTimeout(()=>{
+        if(entered===PASSCODE){ unlock(); }
+        else{
+          codeDisplay.classList.add('shake');
+          setTimeout(()=>{ entered=""; renderSlots(); codeDisplay.classList.remove('shake'); }, 450);
+        }
+      }, 250);
+    }
+  }
+  function renderSlots(){
+    slots.forEach((s,i)=>{
+      if(i < entered.length){ s.textContent='♥'; s.classList.add('filled'); }
+      else{ s.textContent=''; s.classList.remove('filled'); }
+    });
+  }
+  function unlock(){
+    goTo('scene-reveal');
+  }
+
+  function goTo(id){
+    document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function blowCandles(){
+    document.getElementById('candles').classList.add('blown');
+    document.getElementById('blowBtn').style.display='none';
+    document.getElementById('wishSub').textContent = 'wish made ✨';
+    setTimeout(()=>{ document.getElementById('wishNextBtn').style.display='inline-block'; }, 500);
+  }
+
+  function openSub(id){ document.getElementById(id).classList.add('active'); }
+  function closeSub(id){ document.getElementById(id).classList.remove('active'); }
+
+  function developPhoto(){
+    document.getElementById('developBtn').style.display='none';
+    document.getElementById('cameraTitle').textContent = 'wow, look at this gorgeous human';
+    const p = document.getElementById('polaroid');
+    p.style.display='block';
+    requestAnimationFrame(()=> setTimeout(()=>p.classList.add('developed'), 80));
+  }
+
+  // lazy-load song iframe only when opened
+  document.querySelector('button.gift-btn[onclick*="sub-song"]')?.addEventListener('click', ()=>{
+    const f = document.getElementById('songFrame');
+    if(f.src==='about:blank') f.src = f.dataset.src;
+  });
+</script>
+</body>
+</html>
